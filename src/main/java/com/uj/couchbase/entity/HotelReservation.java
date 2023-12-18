@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.couchbase.core.mapping.Document;
-import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
-import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
+import java.util.List;
 
-@Builder
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +22,5 @@ public class HotelReservation {
     private Integer bookingId;
     private LocalDate checkIn;
     private LocalDate checkOut;
-    private RoomDetails roomDetails;
+    private List<RoomDetails> roomDetails;
 }

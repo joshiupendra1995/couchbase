@@ -1,9 +1,0 @@
-spring:
-  couchbase:
-    connection-string: couchbase://localhost
-    user-name: root
-    password: root@123
-  data:
-    couchbase:
-      bucket-name: hotel-reservation
-      autoIndex: true
