@@ -1,12 +1,10 @@
 package com.uj.couchbase.controller;
 
+import com.uj.couchbase.model.Request;
 import com.uj.couchbase.model.Response;
 import com.uj.couchbase.service.CouchbaseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -20,4 +18,15 @@ public class CouchbaseController {
     public Mono<Response> getAndTouch(@PathVariable String document, @PathVariable String bucket) {
         return couchbaseService.getAndTouch(document, bucket);
     }
+
+    @PostMapping
+    public Mono<Response> create(@RequestBody Request request){
+        return couchbaseService.createOrUpdate(request);
+    }
+
+    @DeleteMapping("/{bucket}/{document}")
+    public Mono<Response> delete(@PathVariable String bucket, @PathVariable String document){
+        return couchbaseService.delete(bucket,document);
+    }
+
 }

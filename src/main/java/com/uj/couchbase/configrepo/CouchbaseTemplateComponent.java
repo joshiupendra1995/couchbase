@@ -2,6 +2,8 @@ package com.uj.couchbase.configrepo;
 
 import com.couchbase.client.java.ReactiveCollection;
 import com.couchbase.client.java.kv.GetAndTouchOptions;
+import com.couchbase.client.java.kv.RemoveOptions;
+import com.couchbase.client.java.kv.UpsertOptions;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,24 @@ public class CouchbaseTemplateComponent {
             logger.error("Error occurred {} ", throwable.getMessage());
             throw new RuntimeException("Document not found {}", throwable);
         });
+    }
+
+    public Mono<Boolean> createOrUpdate(String bucket, String document, String timeToLive, JsonNode data) {
+        return reactiveCollections.get(bucket)
+                .upsert(document, data,
+                        UpsertOptions.upsertOptions().expiry(Duration.ofSeconds(Integer.parseInt(timeToLive)))
+                                .timeout(Duration.ofMillis(couchbaseOperationTimeoutInMs)))
+                .doOnError(throwable -> {
+                     throw new RuntimeException(throwable.getMessage());
+                }).thenReturn(Boolean.TRUE);
+    }
+
+    public Mono<Boolean> deleteById(String document, String bucket) {
+        return reactiveCollections.get(bucket)
+                .remove(document, RemoveOptions.removeOptions().timeout(Duration.ofMillis(couchbaseOperationTimeoutInMs)))
+                .doOnError(throwable -> {
+                    throw new RuntimeException(throwable);
+                }).thenReturn(Boolean.TRUE);
     }
 
 }

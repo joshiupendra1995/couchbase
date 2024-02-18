@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Request {
     private String bucket;
-    private String key;
+    private String document;
     private String timeToLive;
     private JsonNode data;
 }
