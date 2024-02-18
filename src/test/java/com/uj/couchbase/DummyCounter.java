@@ -2,6 +2,7 @@ package com.uj.couchbase;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 class DummyCounter {
 
@@ -15,5 +16,22 @@ class DummyCounter {
             }
             return counter;
         }).subscribe(System.out::println);
+    }
+
+    @Test
+    void testDummyCounterHandle() {
+       Flux<Object> evenNumbers = Flux.range(1,10).handle((value , syk)->{
+           if(value % 2 == 0){
+               if(value == 4){
+                   syk.complete();
+                   return;
+               }
+               syk.next(value);
+           }
+       }).log();
+
+        StepVerifier.create(evenNumbers)
+                .expectNext(2)
+                .verifyComplete();
     }
 }
